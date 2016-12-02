@@ -1,5 +1,5 @@
-name: Beepboop Starterbot
-description: A simple Python bot sample for Beep Boop
+name: Eliza
+description: A chatbot meant to emulate a Rogerian psychologist.
 avatar: resources/avatar.png
 background: resources/background.png
 config:
@@ -12,5 +12,3 @@ config:
     info: This is an secret option
     type: secret
     default: not secret though
-screenshots:
-  - screenshot: resources/screenshot1.png

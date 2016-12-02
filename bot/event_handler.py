@@ -11,7 +11,6 @@ class RtmEventHandler(object):
         self.msg_writer = msg_writer
 
     def handle(self, event):
-
         if 'type' in event:
             self._handle_by_type(event['type'], event)
 
@@ -25,10 +24,10 @@ class RtmEventHandler(object):
             self._handle_message(event)
         elif event_type == 'channel_joined':
             # you joined a channel
-            self.msg_writer.write_help_message(event['channel'])
+            self.msg_writer.write_starter(event['channel'])
         elif event_type == 'group_joined':
             # you joined a private group
-            self.msg_writer.write_help_message(event['channel'])
+            self.msg_writer.write_starter(event['channel'])
         else:
             pass
 
@@ -39,24 +38,14 @@ class RtmEventHandler(object):
             msg_txt = event['text']
 
             if self.clients.is_bot_mention(msg_txt) or self._is_direct_message(event['channel']):
-                # e.g. user typed: "@pybot tell me a joke!"
-                if 'help' in msg_txt:
-                    self.msg_writer.write_help_message(event['channel'])
-                elif re.search('hi|hey|hello|howdy', msg_txt):
+                if re.search('hi|hello', msg_txt):
                     self.msg_writer.write_greeting(event['channel'], event['user'])
-                elif 'joke' in msg_txt:
-                    self.msg_writer.write_joke(event['channel'])
-                elif 'attachment' in msg_txt:
-                    self.msg_writer.demo_attachment(event['channel'])
-                elif 'echo' in msg_txt:
-                    self.msg_writer.send_message(event['channel'], msg_txt)
+                elif re.search('goodbye', msg_txt):
+                    self.msg_writer.write_goodbye(event['channel'], event['user'])
                 else:
-                    self.msg_writer.write_prompt(event['channel'])
+                    self.msg_writer.write_psychobabble(event['channel'], msg_txt)
+            else:
+                self.msg_writer.write_psychobabble(event['channel'], msg_txt)
 
     def _is_direct_message(self, channel):
-        """Check if channel is a direct message channel
-
-        Args:
-            channel (str): Channel in which a message was received
-        """
-        return channel.startswith('D')
+         return channel.startswith('D')
